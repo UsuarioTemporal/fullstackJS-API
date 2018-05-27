@@ -5,7 +5,7 @@ const createError = require('http-errors');
 const movimientoModel = require('../models/movimiento-model');
 
 router.get('/', (req, res, next) => {
-	movimientoModel.listar()
+	movimientoModel.listar(req.user._id)
 	.then(movimientos => {
 		res.json(movimientos);
 	}).catch(next);
@@ -20,6 +20,10 @@ router.get('/:id', (req, res, next) => {
 			return res.status(404).json(createError(404));
 		}
 
+		if (req.user._id !== movimiento.userId) {
+			return res.status(403).json(createError(403, 'Este movimiento no le pertenece.'))
+		}
+
 		res.json(movimiento);
 	}).catch(next);
 });
@@ -31,7 +35,8 @@ router.post('/', (req, res, next) => {
 		fecha: fecha,
 		monto: monto,
 		categoria: categoria,
-		descripcion: descripcion
+		descripcion: descripcion,
+		userId: req.user._id
 	}).then(() => {
 		res.json({success: true});
 	})
@@ -55,7 +60,7 @@ router.patch('/:id', (req, res, next) => {
 		return res.status(400).json(createError(400));
 	}
 
-	movimientoModel.actualizar(id, objUpdate)
+	movimientoModel.actualizar(id, objUpdate, req.user._id)
 	.then(mov => {
 		if (!mov.n) {
 			return res.status(404).json(createError(404));

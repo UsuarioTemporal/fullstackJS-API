@@ -27,6 +27,11 @@ const MoviminetoSchema  = new mongoose.Schema({
 		required: true,
 		default: 0
 	},
+	userId: {
+		type: String,
+		index: true,
+		required: true
+	},
 	fecha: String,
 	monto: {
 		type: Number
