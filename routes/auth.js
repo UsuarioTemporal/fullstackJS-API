@@ -3,6 +3,8 @@ const router = require('express').Router();
 
 const createError = require('http-errors');
 
+const sessionMiddleware = require('../middlewares/sesion-middleware');
+
 const userModel = require('../models/usuario-model');
 
 router.post('/register', (req, res, next) => {
@@ -49,11 +51,11 @@ router.post('/login', (req, res, next) => {
 	.catch(next);
 });
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', sessionMiddleware, (req, res, next) => {
 	res.status(405).json(createError(405));
 });
 
-router.post('/update', (req, res, next) => {
+router.post('/update', sessionMiddleware, (req, res, next) => {
 	res.status(405).json(createError(405));
 });
 

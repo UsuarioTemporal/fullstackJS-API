@@ -23,6 +23,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', require('./routes/auth'));
 
+
+app.use(require('./middlewares/sesion-middleware'));
+
 app.use('/api', require('./routes/api'));
 
 // catch 404 and forward to error handler

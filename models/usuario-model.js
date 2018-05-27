@@ -53,9 +53,15 @@ async function eliminarSession(sessionId) {
 	return SessionModel.deleteOne({_id: sessionId});
 }
 
+async function buscarSession(sessionId) {
+	return SessionModel.findById(sessionId).exec();
+}
+
 module.exports = {
 	crear: crear,
 	buscarConId: buscarConId,
 	actualizar: actualizar,
-	login: login
+	login: login,
+	eliminarSession: eliminarSession,
+	buscarSession: buscarSession
 };
