@@ -2,35 +2,68 @@
 const router = require('express').Router();
 const createError = require('http-errors');
 
-let data = [
-	{ "id": 1, "fecha": "01/10/2018", "monto": 823.12, "categoria": "ingreso", "descripcion": "Freelance de Ecommerce" },
-	{ "id": 2, "fecha": "02/10/2018", "monto": 157.23, "categoria": "gasto", "descripcion": "Dia de la madre" },
-	{ "id": 3, "fecha": "03/10/2018", "monto": 87.21, "categoria": "ingreso", "descripcion": "Consultoría" },
-	{ "id": 4, "fecha": "04/10/2018", "monto": 120.21, "categoria": "gasto", "descripcion": "Uber" },
-	{ "id": 5, "fecha": "05/10/2018", "monto": 56.12, "categoria": "gasto", "descripcion": "Salida romantica" },
-	{ "id": 6, "fecha": "06/10/2018", "monto": 789.21, "categoria": "ingreso", "descripcion": "Freelance de Desarrollo de sitio web" }
-];
+const movimientoModel = require('../models/movimiento-model');
 
 router.get('/', (req, res, next) => {
-	res.json(data);
+	movimientoModel.listar()
+	.then(movimientos => {
+		res.json(movimientos);
+	}).catch(next);
 });
 
 router.get('/:id', (req, res, next) => {
 	let id = req.params.id;
-	
-	res.json(data[0]);
+
+	movimientoModel.get(id)
+	.then(movimiento => {
+		if (!movimiento) {
+			return res.status(404).json(createError(404));
+		}
+
+		res.json(movimiento);
+	}).catch(next);
 });
 
 router.post('/', (req, res, next) => {
-	next(createError(405));
-})
+	let {fecha, monto, categoria, descripcion} = req.body;
+
+	movimientoModel.guardar({
+		fecha: fecha,
+		monto: monto,
+		categoria: categoria,
+		descripcion: descripcion
+	}).then(() => {
+		res.json({success: true});
+	})
+	.catch(next);
+});
 
 router.put('/', (req, res, next) => {
 	next(createError(405));
 });
 
-router.patch('/', (req, res, next) => {
-	next(createError(405));
+router.patch('/:id', (req, res, next) => {
+	let id = req.params.id;
+
+	let objUpdate = {};
+	if (req.body.fecha) objUpdate.fecha = req.body.fecha;
+	if (req.body.monto) objUpdate.fecha = req.body.monto;
+	if (req.body.categoria) objUpdate.fecha = req.body.categoria;
+	if (req.body.descripcion) objUpdate.fecha = req.body.descripcion;
+
+	if (Object.keys(objUpdate).length) {
+		return res.status(400).json(createError(400));
+	}
+
+	movimientoModel.actualizar(id, objUpdate)
+	.then(mov => {
+		if (!mov.n) {
+			return res.status(404).json(createError(404));
+		}
+
+		//check mov.nModified > 0
+		res.json({success: true});
+	}).catch(next);
 });
 
 module.exports = router;

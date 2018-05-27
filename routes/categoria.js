@@ -12,7 +12,7 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 	next(createError(405));
-})
+});
 
 router.put('/', (req, res, next) => {
 	next(createError(405));
