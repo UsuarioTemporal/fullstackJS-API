@@ -21,8 +21,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', require('./routes/auth'));
+if (process.env.API_DOC === "true") {
+	const swaggerUi = require('swagger-ui-express');
+	const YAML = require('yamljs');
+	const swaggerDocument = YAML.load('./swagger.yaml');
 
+	app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
+
+app.use('/auth', require('./routes/auth'));
 
 app.use(require('./middlewares/sesion-middleware'));
 

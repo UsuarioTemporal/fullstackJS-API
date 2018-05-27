@@ -1,0 +1,55 @@
+swagger: "2.0"
+info:
+  description: "Documentacion para la aplicacion SueldoAPI"
+  version: "1.0.0"
+  title: "SueldoAPI"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "Ingvcueva@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+# host: "api.b2b.zonngo.com"
+basePath: "/"
+tags:
+- name: "SueldoAPI"
+  description: "Api para SuedoApp"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "http"
+paths:
+  /api/movimiento:
+    get:
+      tags:
+        - movimiento
+      summary: "Listar"
+      description: "Obtener todos los movimientos"
+      operationId: "movimientoGet"
+      responses:
+        200:
+          description: "Array con movimientos"
+          schema:
+            type: array
+            items:
+              type: object
+definitions:
+  Movimiento:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      userId:
+        type: "string"
+      fecha:
+        type: "string"
+      monto:
+        type: number
+      categoria:
+        type: "string"
+      descripcion:
+        type: "string"
+    xml:
+      name: "Order"
