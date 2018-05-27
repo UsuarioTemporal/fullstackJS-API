@@ -52,11 +52,44 @@ router.post('/login', (req, res, next) => {
 });
 
 router.post('/logout', sessionMiddleware, (req, res, next) => {
-	res.status(405).json(createError(405));
+	let sessionId = req.cookies['x-session'];
+
+	userModel
+	.eliminarSession(sessionId)
+	.then(result => {
+		res.clearCookie('x-session');
+		res.json({success: true});
+	})
+	.catch(next);
 });
 
 router.post('/update', sessionMiddleware, (req, res, next) => {
-	res.status(405).json(createError(405));
+	let {name, mobile, fecNac, password} = req.body;
+	let nData = {};
+	if (name) nData.name = name;
+	if (mobile) nData.mobile = mobile;
+	if (fecNac) nData.fecNac = fecNac;
+	if (password) nData.password = password;
+
+	if (!Object.keys(nData).length) {
+		return res.status(400).json(createError(400, 'Nada que actualizar'));
+	}
+
+	userModel.actualizar(req.user._id, nData)
+	.then(result => {
+		res.json({success: true});
+	})
+	.catch(next);
+});
+
+router.get('/profile', sessionMiddleware, (req, res, next) => {
+	userModel.buscarConId(req.user._id)
+	.then(result => {
+		result = result.toObject();
+		delete result.password;
+		res.json(result);
+	})
+	.catch(next);
 });
 
 module.exports = router;

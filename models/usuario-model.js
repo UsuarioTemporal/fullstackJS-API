@@ -26,6 +26,9 @@ async function buscarConId(id) {
 }
 
 async function actualizar(id, data) {
+	if (data.password) {
+		data.password = await passwordHash.generateHash(data.password);
+	}
 	return UserModel.updateOne({_id: id}, data).exec();
 }
 
