@@ -16,7 +16,7 @@ async function get(id) {
 }
 
 async function actualizar(id, data) {
-	return MovimientoModel.updateOne({id: id}, data, {new: true}).exec();
+	return MovimientoModel.updateOne({id: id}, data).exec();
 }
 
 module.exports = {
