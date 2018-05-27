@@ -40,8 +40,6 @@ const MoviminetoSchema  = new mongoose.Schema({
 	}
 });
 
-const MovimientoModel = mongoose.model('Movimiento', MoviminetoSchema);
-
 /**
  * Para lograr el autoincremento
  */
@@ -63,6 +61,42 @@ MoviminetoSchema.pre('save', function(next) {
 });
 
 
+//Declaracion de los modelos
+const MovimientoModel = mongoose.model('Movimiento', MoviminetoSchema);
+
+
+const UserModel = mongoose.model('Usuario', new mongoose.Schema({
+	email: {
+		type: String,
+		index: true,
+		unique: true,
+		required: true
+	},
+	password: {
+		type: String,
+		required: true
+	},
+	name: {
+		type: String,
+		required: true
+	},
+	mobile: String,
+	fecNac: Date
+}));
+
+const SessionModel = mongoose.model('Session', new mongoose.Schema({
+	_id: {
+		type: String,
+		required: true
+	},
+	userId: {
+		type: String,
+		required: true
+	}
+}));
+
 module.exports = {
-	MovimientoModel: MovimientoModel
+	MovimientoModel: MovimientoModel,
+	UserModel: UserModel,
+	SessionModel: SessionModel
 };
