@@ -20,7 +20,7 @@ tags:
 schemes:
 - "http"
 paths:
-  /api/movimiento:
+  /api/movimiento/:
     get:
       tags:
         - movimiento
@@ -33,6 +33,37 @@ paths:
           schema:
             type: array
             items:
+              type: object
+    post:
+      tags:
+        - movimiento
+      summary: Crear
+      description: "Crear un nuevo movimiento"
+      operationId: "movimientoNew"
+      parameters:
+        - name: fecha
+          in: formData
+          type: string
+          required: true
+          description: "Fecha en la que se registro el movimiento"
+        - name: monto
+          in: formData
+          type: number
+          required: true
+          description: "Monto del movimiento"
+        - name: categoria
+          in: formData
+          type: string
+          required: true
+          description: "Categoria a la cual pertenece el movimiento"
+        - name: descripcion
+          in: formData
+          type: string
+          description: "Descripcion del por que se hizo ese movimiento"
+      responses:
+        200:
+          description: "Movimiento creado con exito"
+          schema:
               type: object
 definitions:
   Movimiento:
@@ -53,3 +84,19 @@ definitions:
         type: "string"
     xml:
       name: "Order"
+  Usuario:
+    type: object
+    properties:
+      _id:
+        type: string
+        format: uuid
+      email:
+        type: string
+      password:
+        type: string
+      name:
+        type: string
+      mobile:
+        type: string
+      fecNac:
+        type: string

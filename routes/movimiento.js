@@ -27,7 +27,7 @@ router.get('/:id', (req, res, next) => {
 			return res.status(404).json(createError(404));
 		}
 
-		if (req.user._id !== movimiento.userId) {
+		if (req.user._id.toString() !== movimiento.userId) {
 			return res.status(403).json(createError(403, 'Este movimiento no le pertenece.'))
 		}
 
