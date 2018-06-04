@@ -7,8 +7,8 @@ async function guardar(movimiento) {
 	return document.save();
 }
 
-async function listar(userId) {
-	return MovimientoModel.find({userId: userId}).exec();
+async function listar(userId, skip, size) {
+	return MovimientoModel.find({userId: userId}).sort({id: 'desc'}).skip(skip).limit(size).exec();
 }
 
 async function get(id) {

@@ -5,7 +5,14 @@ const createError = require('http-errors');
 const movimientoModel = require('../models/movimiento-model');
 
 router.get('/', (req, res, next) => {
-	movimientoModel.listar(req.user._id)
+	let {skip, size} = req.query;
+	skip = parseInt(skip) || 0;
+	skip = Math.max(skip, 0);
+
+	size = parseInt(size) || 10;
+	size = Math.min(Math.max(size, 1), 50);
+
+	movimientoModel.listar(req.user._id, skip, size)
 	.then(movimientos => {
 		res.json(movimientos);
 	}).catch(next);
@@ -52,11 +59,11 @@ router.patch('/:id', (req, res, next) => {
 
 	let objUpdate = {};
 	if (req.body.fecha) objUpdate.fecha = req.body.fecha;
-	if (req.body.monto) objUpdate.fecha = req.body.monto;
-	if (req.body.categoria) objUpdate.fecha = req.body.categoria;
-	if (req.body.descripcion) objUpdate.fecha = req.body.descripcion;
+	if (req.body.monto) objUpdate.monto = req.body.monto;
+	if (req.body.categoria) objUpdate.categoria = req.body.categoria;
+	if (req.body.descripcion) objUpdate.descripcion = req.body.descripcion;
 
-	if (Object.keys(objUpdate).length) {
+	if (!Object.keys(objUpdate).length) {
 		return res.status(400).json(createError(400));
 	}
 
